@@ -91,3 +91,9 @@ These are the results I obtained in my system with 1000 elements in each array:
 
     [0.06933971 0.37897217 0.9776624  ... 0.12357965 0.29359143 0.12585706]
     numpy.polymul check: [ True  True  True ...  True  True  True]
+
+## Conclusion
+
+The best result (least time) was obtained by applying the Fortran module.
+The performance obtained from numba is close to that from the Fortran module, but the first call to the function includes the compilation time.
+
