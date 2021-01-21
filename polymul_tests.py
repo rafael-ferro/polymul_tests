@@ -4,6 +4,7 @@ from numba import jit, prange
 from timeit import timeit
 
 import cpython_polymul as cp
+import fortran_polymul as ft
 
 """
 This function receives two lists containing the coefficients
@@ -58,75 +59,85 @@ if __name__=='__main__':
     np.random.seed(42)
 
     # Test arrays
-    p1 = np.random.random_sample((10,))
-    p2 = np.random.random_sample((10,))
-
-    # p1 = np.random.randint(1, 10, 10)
-    # p2 = np.random.randint(1, 10, 10)
-    print(p1)
-    print(p2)
+    p1 = np.random.rand(1000)
+    p2 = np.random.rand(1000)
 
     # Using numpy.polymul to check the results
-    # (https://numpy.org/doc/stable/reference/generated/numpy.polymul.html)
     np_check = np.polymul(p1, p2)
+    print("numpy result:")
     print(np_check)
 
 #-----------------------------------------------------------------------------
-# NAIVE POLYNOMIAL MULTIPLICATION
+# USING THE ENUMERATE FUNCTION IN THE FOR LOOPS
 #-----------------------------------------------------------------------------
-    print("Using function naive_polymul(p1, p2)")
+    print("\n\nUsing function naive_polymul(p1, p2)\n")
+
     start = time.time()
     p3 = naive_polymul(p1, p2)
     end = time.time()
-    print("Elapsed = %s" % (end - start))
+
+    print("Elapsed time = %s\n" % (end - start))
     print(p3)
-    print("numpy.polymul check:", np.array_equal(p3, np_check))
-    print("\n\n")
+    print("numpy.polymul check:", np.isclose(p3, np_check))
 
 
 #-----------------------------------------------------------------------------
-# NUMPY NDENUMERATE
+# USING NUMPY NDENUMERATE
 #-----------------------------------------------------------------------------
-    print("Using function ndenumerate_polymul(p1, p2)")
+    print("\n\nUsing function ndenumerate_polymul(p1, p2)\n")
+
     start = time.time()
     p3 = ndenumerate_polymul(p1, p2)
     end = time.time()
-    print("Elapsed = %s" % (end - start))
+
+    print("Elapsed time = %s\n" % (end - start))
     print(p3)
-    print("numpy.polymul check: ", np.array_equal(p3, np_check))
-    print("\n\n")
+    print("numpy.polymul check:", np.isclose(p3, np_check))
 
 
 #-----------------------------------------------------------------------------
-# NUMBA
+# USING NUMBA
 #-----------------------------------------------------------------------------
-    print("Using function numba_polymul(p1, p2)")
+    print("\n\nUsing function numba_polymul(p1, p2)\n")
     # Compilation time is included in the execution time
     start = time.time()
     p3 = numba_polymul(p1, p2)
     end = time.time()
-    print("Elapsed (with compilation) = %s" % (end - start))
+    print("Elapsed time (with compilation) = %s\n" % (end - start))
     # Now that the function is compiled,
     # re-time it executing from the cache
     start = time.time()
     p3 = numba_polymul(p1, p2)
     end = time.time()
-    print("Elapsed (after compilation) = %s" % (end - start))
+    print("Elapsed time (after compilation) = %s\n" % (end - start))
     print(p3)
-    print("numpy.polymul check: ", np.array_equal(p3, np_check))
-    print("\n\n")
+    print("numpy.polymul check:", np.isclose(p3, np_check))
 
 
 #-----------------------------------------------------------------------------
-# USING CUSTOM CPYTHON MODULE
+# CUSTOM CPYTHON MODULE
 #-----------------------------------------------------------------------------
-    print("Using function cpython_polymul")
+    print("\n\nUsing function cpython_polymul with custom cpython code\n")
+
     start = time.time()
     p3 = cp.polymul(p1, p2)
     end = time.time()
-    print("Elapsed = %s" % (end - start))
-    print(p3)
-    print("numpy.polymul check: ", np.array_equal(p3, np_check))
-    print("\n\n")
 
+    print("Elapsed time = %s\n" % (end - start))
+    print(p3)
+    print("numpy.polymul check:", np.isclose(p3, np_check))
+
+
+#-----------------------------------------------------------------------------
+# CUSTOM FORTRAN MODULE
+#-----------------------------------------------------------------------------
+    print("\n\nUsing function fortran_polymul with custom fortran code\n")
+
+    start = time.time()
+    p3 = ft.polymul(p1, p2, len(p1), len(p2))
+    end = time.time()
+
+    print("Elapsed time = %s\n" % (end - start))
+    print(p3)
+    print("numpy.polymul check:", np.isclose(p3, np_check))
 
