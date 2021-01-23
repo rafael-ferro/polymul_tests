@@ -6,25 +6,6 @@ from timeit import timeit
 import cpython_polymul as cp
 import fortran_polymul as ft
 
-"""
-This function receives two lists containing the coefficients
-of the polynomials to be multiplied.
-The polynomials are of the form:
-p(x) = a * x**n + b * x**(n-1) + ... + c * x + d
-"""
-
-# Create an array of zeros with the size of the resulting polynomial.
-
-# Iterate over the coefficients of the input polynomials,
-# multiplying them and adding those with the same exponent
-# (corresponding to the index of the final array)
-
-# The order of a polynomial p is given by len(p)-1, since the
-# corresponding array contains the constanst term (x**0).
-# The resulting polynomial is thus of order (len(p1)-1 + len(p2)-1),
-# and the array to store its coefficients must have a length of
-# (len(p1)-1 + len(p2)-1) + 1, in order to account for the new
-# constant term.
 
 def naive_polymul(p1, p2):
     p3 = np.zeros(len(p1) + len(p2) - 1)
